@@ -3,6 +3,8 @@ import React from "react";
 import CreateDiscussionForm from "../components/discussions/CreateDiscussionForm";
 import { useNavigate } from "react-router-dom";
 
+
+
 function CreateDiscussionPage() {
   const navigate = useNavigate();
 
@@ -11,14 +13,12 @@ function CreateDiscussionPage() {
     navigate(`/discussions/${discussion.id}`);
   };
 
-  return (
-    <div className="page create-discussion-page">
-      <header className="page-header">
-        <button onClick={() => navigate(-1)}>{"<"}</button>
+   return (
+    <div className="create-discussion-page">
+      <div className="create-discussion-layout">
         <h1>Create discussion</h1>
-      </header>
-
-      <CreateDiscussionForm onCreated={handleCreated} />
+        <CreateDiscussionForm onCreated={handleCreated} />
+      </div>
     </div>
   );
 }

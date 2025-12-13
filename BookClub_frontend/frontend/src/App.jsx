@@ -1,13 +1,17 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import React from "react";
-import CreateDiscussionForm from "./components/discussions/CreateDiscussionForm";
+import CreateDiscussionPage from "./pages/CreateDiscussionPage";
+import DiscussionsListPage from "./pages/DiscussionsListPage";
 
 function App() {
   return (
-    <div className="App">
-      <h1>Create discussion</h1>
-      <CreateDiscussionForm />
-    </div>
+    <BrowserRouter>
+      <Routes>
+          <Route path="/create" element={<CreateDiscussionPage />} />
+        <Route path="/" element={<DiscussionsListPage />} />
+      
+      </Routes>
+    </BrowserRouter>
   );
 }
 

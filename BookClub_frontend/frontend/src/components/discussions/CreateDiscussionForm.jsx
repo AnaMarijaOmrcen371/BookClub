@@ -58,7 +58,7 @@ function CreateDiscussionForm({ onCreated }) {
           maxLength={200}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          placeholder="Edward ili Jacob?"
+          placeholder="Add title..."
         />
       </div>
 
@@ -69,7 +69,7 @@ function CreateDiscussionForm({ onCreated }) {
           rows={5}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          placeholder="Bez obzira podržavate li vampirski šarm Edwarda Cullena ili toplinu Jacobovog odnosa..."
+          placeholder="Add description..."
         />
       </div>
 

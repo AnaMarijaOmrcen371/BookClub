@@ -1,6 +1,6 @@
 // src/services/discussionService.js
 
-const API_BASE_URL = "https://localhost:7022"; // prilagodi port prema backendu
+const API_BASE_URL = "https://localhost:7022"; 
 
 export async function createDiscussion({ title, description }) {
   const response = await fetch(`${API_BASE_URL}/api/discussions`, {

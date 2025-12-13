@@ -79,6 +79,23 @@ namespace BookClub.Controllers
 
             return Ok(dto);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetDiscussions()
+        {
+            var discussions = await _context.Discussions
+                .OrderByDescending(d => d.CreatedAt)
+                .Select(d => new
+                {
+                    d.Id,
+                    d.Title,
+                    d.CreatedAt
+                })
+                .ToListAsync();
+
+            return Ok(discussions);
+        }
+
     }
 }
 
