@@ -1,4 +1,4 @@
-﻿// Data/ApplicationDbContext.cs
+﻿
 using Microsoft.EntityFrameworkCore;
 using BookClub.Models.Entities;
 using System.Collections.Generic;

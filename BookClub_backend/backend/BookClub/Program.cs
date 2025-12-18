@@ -1,4 +1,8 @@
 using BookClub.Data;
+using BookClub.Repositories.Interfaces;
+using BookClub.Repositories;
+using BookClub.Services.Interfaces;
+using BookClub.Services;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -9,6 +13,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
         builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add services to the container.
+builder.Services.AddScoped<IDiscussionService, DiscussionService>();
+builder.Services.AddScoped<IDiscussionRepository, DiscussionRepository>();
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

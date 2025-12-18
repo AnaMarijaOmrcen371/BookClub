@@ -1,9 +1,8 @@
 ﻿using BookClub.Models.Dtos;
-using BookClub.Models.Entities;
-using Microsoft.AspNetCore.Http;
+using BookClub.Models.Requests;
+using BookClub.Services;
+using BookClub.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using BookClub.Data;
-using Microsoft.EntityFrameworkCore;
 
 namespace BookClub.Controllers
 {
@@ -11,91 +10,40 @@ namespace BookClub.Controllers
     [ApiController]
     public class DiscussionsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IDiscussionService _service;
 
-        public DiscussionsController(ApplicationDbContext context)
+        public DiscussionsController(IDiscussionService service)
         {
-            _context = context;
+            _service = service;
         }
 
-        // POST: /api/discussions
         [HttpPost]
-        public async Task<ActionResult<DiscussionDto>> CreateDiscussion(
-            [FromBody] CreateDiscussionRequest request)
+        public async Task<IActionResult> CreateDiscussion([FromBody] CreateDiscussionRequest request)
         {
-            // 1) osnovna validacija inputa
-            if (string.IsNullOrWhiteSpace(request.Title))
+            try
             {
-                return BadRequest("Title is required.");
+                var dto = await _service.CreateAsync(request);
+                return CreatedAtAction(nameof(GetDiscussionById), new { id = dto.Id }, dto);
             }
-
-            // 2) odredi trenutno prijavljenog usera (zasad hard-coded)
-            var currentUserId = 1; // TODO: zamijeni auth-om
-
-            // 3) mapiranje DTO -> entitet (MODEL)
-            var discussion = new Discussion
+            catch (ArgumentException ex)
             {
-                Title = request.Title.Trim(),
-                Description = request.Description?.Trim() ?? string.Empty,
-                CreatedByUserId = currentUserId,
-                CreatedAt = DateTime.UtcNow
-            };
-
-            // 4) spremi u bazu
-            _context.Discussions.Add(discussion);
-            await _context.SaveChangesAsync();
-
-            // 5) mapiranje entitet -> DTO za odgovor
-            var dto = new DiscussionDto
-            {
-                Id = discussion.Id,
-                Title = discussion.Title,
-                Description = discussion.Description,
-                CreatedAt = discussion.CreatedAt
-            };
-
-            // 6) vrati HTTP 201 + DTO
-            return CreatedAtAction(nameof(GetDiscussionById),
-                new { id = dto.Id }, dto);
+                return BadRequest(ex.Message);
+            }
         }
 
-        // GET: /api/discussions/{id}
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<DiscussionDto>> GetDiscussionById(int id)
+        public async Task<IActionResult> GetDiscussionById(int id)
         {
-            var dto = await _context.Discussions
-                .Where(d => d.Id == id)
-                .Select(d => new DiscussionDto
-                {
-                    Id = d.Id,
-                    Title = d.Title,
-                    Description = d.Description,
-                    CreatedAt = d.CreatedAt
-                })
-                .FirstOrDefaultAsync();
-
-            if (dto == null)
-                return NotFound();
-
+            var dto = await _service.GetByIdAsync(id);
+            if (dto == null) return NotFound();
             return Ok(dto);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetDiscussions()
         {
-            var discussions = await _context.Discussions
-                .OrderByDescending(d => d.CreatedAt)
-                .Select(d => new
-                {
-                    d.Id,
-                    d.Title,
-                    d.CreatedAt
-                })
-                .ToListAsync();
-
+            var discussions = await _service.GetAllAsync();
             return Ok(discussions);
         }
-
     }
 }
-
