@@ -6,7 +6,7 @@ namespace BookClub.Services.Interfaces
     public interface IDiscussionService
     {
         Task<DiscussionDto> CreateAsync(CreateDiscussionRequest request);
-        Task<List<DiscussionDto>> GetAllAsync();
+        Task<List<DiscussionDto>> GetAllAsync(string sort);
         Task<DiscussionDto?> GetByIdAsync(int id);
     }
 }

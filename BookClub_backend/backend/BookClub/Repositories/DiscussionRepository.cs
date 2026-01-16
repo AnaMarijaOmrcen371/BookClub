@@ -1,6 +1,7 @@
 ﻿using BookClub.Data;
 using BookClub.Models.Entities;
 using BookClub.Repositories.Interfaces;
+using BookClub.Strategies.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookClub.Repositories;
@@ -27,4 +28,13 @@ public class DiscussionRepository : IDiscussionRepository
 
     public async Task SaveChangesAsync()
         => await _context.SaveChangesAsync();
+    public async Task<List<Discussion>> GetAllAsync(
+    IDiscussionSortingStrategy sortingStrategy)
+    {
+        var query = _context.Discussions.AsQueryable();
+        query = sortingStrategy.Apply(query);
+
+        return await query.ToListAsync();
+    }
+
 }

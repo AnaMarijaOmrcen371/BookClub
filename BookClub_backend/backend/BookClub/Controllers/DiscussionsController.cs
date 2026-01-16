@@ -40,9 +40,9 @@ namespace BookClub.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetDiscussions()
+        public async Task<IActionResult> GetDiscussions([FromQuery] string sort = "newest")
         {
-            var discussions = await _service.GetAllAsync();
+            var discussions = await _service.GetAllAsync(sort);
             return Ok(discussions);
         }
     }
