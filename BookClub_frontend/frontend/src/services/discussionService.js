@@ -1,6 +1,6 @@
 // src/services/discussionService.js
 
-const API_BASE_URL = "https://localhost:7022"; 
+const API_BASE_URL = import.meta.env.VITE_API_URL; 
 
 export async function createDiscussion({ title, description }) {
   const response = await fetch(`${API_BASE_URL}/api/discussions`, {
